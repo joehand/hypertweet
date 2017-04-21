@@ -21,17 +21,15 @@ function archiverStream (dir, cb) {
 
   var tweetstream = twitter.stream('https://userstream.twitter.com/1.1/user.json')
   var userFeed = hypercore(path.join(dataDir, 'feed'), {valueEncoding: 'json'})
-  userFeed.ready(function () {
+  userFeed.ready(function (err) {
+    if (err) return cb(err)
+
     discovery(userFeed)
-    var key = userFeed.key.toString('hex')
-    console.log('sharing', key)
+    cb(null, userFeed)
   })
 
   tweetstream.on('json', function (data) {
     if (!data.user) return // ignore non-tweet stuff
-    var user = data.user
-    console.log(new Date(), 'tweet by:', user.name)
-
     userFeed.append(data, function (err) {
       if (err) return console.error(err)
     })

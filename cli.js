@@ -25,8 +25,15 @@ if (argv._[0]) {
   tailStream()
 } else {
   // stream twitter data -> hypercore
-  hypertweet(argv.dir, function (err) {
+  hypertweet(argv.dir, function (err, feed) {
     if (err) throw err
+    console.log('Tweets streaming at:', feed.key.toString('hex'))
+    if (argv.watch) {
+      var stream = feed.createReadStream({tail: true, live: true})
+      stream.on('data', function (tweet) {
+        console.log(`${new Date().toLocaleString()} tweet by: ${tweet.user.name}`)
+      })
+    }
   })
 }
 
