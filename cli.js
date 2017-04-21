@@ -39,14 +39,16 @@ function tailStream () {
     console.log(chalk.magenta.bold('HyperTweet!!'))
 
     discovery(feed)
-    var stream = feed.createReadStream({
-      live: true,
-      tail: true
-    })
-    stream.on('data', print)
-    stream.on('error', function (err) {
-      console.error(err)
-      process.exit(1)
+    feed.update(function () {
+      var stream = feed.createReadStream({
+        live: true,
+        tail: true
+      })
+      stream.on('data', print)
+      stream.on('error', function (err) {
+        console.error(err)
+        process.exit(1)
+      })
     })
   })
 
