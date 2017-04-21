@@ -55,7 +55,8 @@ function tailStream () {
   function print (tweet) {
     console.log(`${chalk.blue.bold(tweet.user.name)} (@${tweet.user.screen_name})`)
     console.log(tweet.text, '\n')
-    console.log(chalk.dim(moment(tweet.created_at).fromNow()))
+    var date = new Date(tweet.created_at)
+    console.log(chalk.dim(moment(date).fromNow()))
     console.log('\n\n')
   }
 }
