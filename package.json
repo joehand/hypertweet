@@ -1,7 +1,7 @@
 {
   "name": "hypertweet",
   "description": "tweet really fast p2p ?",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Joe Hand <joe@hand.email>",
   "bugs": {
     "url": "https://github.com/joehand/hypertweet/issues"
