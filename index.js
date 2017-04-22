@@ -24,7 +24,7 @@ function archiverStream (dir, opts, cb) {
     }
   })
 
-  var tweetstream = twitter.stream(streamUrl)
+  var tweetstream = twitter.stream(streamUrl, opts.streamOpts)
   var userFeed = hypercore(storage, {valueEncoding: 'json'})
 
   userFeed.ready(function (err) {

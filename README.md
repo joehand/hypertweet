@@ -69,6 +69,7 @@ Create a stream from the twitter API and share via hypercore `feed`. Automatical
 
 * `dir|storage`: directory or random access module, e.g `random-access-memory`.
 * `opts.streamUrl`: the [twitter streaming api](https://dev.twitter.com/streaming/overview) endpoint you want. defaults to user.
+* `opts.streamOpts`: stream opts
 
 ## License
 
