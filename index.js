@@ -1,13 +1,18 @@
 var hypercore = require('hypercore')
 var Chirp = require('chirp-stream')
-var path = require('path')
 var discovery = require('hyperdiscovery')
+var assert = require('assert')
 
 module.exports = archiverStream
 
-function archiverStream (dir, cb) {
-  var dataDir = dir || path.join(process.cwd(), 'data')
+function archiverStream (dir, opts, cb) {
+  if (typeof opts === 'function') cb = opts
+  assert.ok(dir, 'hypertweet: dir/storage required')
+  assert.ok(cb, 'hypertweet: callback required')
+  if (!opts) opts = {}
 
+  var storage = dir
+  var streamUrl = opts.streamUrl || 'https://userstream.twitter.com/1.1/user.json'
   var twitter = Chirp({
     consumer: {
       public: process.env.TWITTER_CONSUMER_KEY,
@@ -19,11 +24,11 @@ function archiverStream (dir, cb) {
     }
   })
 
-  var tweetstream = twitter.stream('https://userstream.twitter.com/1.1/user.json')
-  var userFeed = hypercore(path.join(dataDir, 'feed'), {valueEncoding: 'json'})
+  var tweetstream = twitter.stream(streamUrl)
+  var userFeed = hypercore(storage, {valueEncoding: 'json'})
+
   userFeed.ready(function (err) {
     if (err) return cb(err)
-
     discovery(userFeed)
     cb(null, userFeed)
   })
@@ -36,7 +41,7 @@ function archiverStream (dir, cb) {
   })
 
   tweetstream.on('end', function () {
-    console.log('end')
+    console.error('tweetstream end')
   })
 
   tweetstream.on('error', function (err) {

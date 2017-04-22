@@ -10,13 +10,24 @@ var dotenv = require('dotenv')
 var hypertweet = require('.')
 
 var argv = minimist(process.argv.slice(2), {
-  alias: {help: 'h'},
-  boolean: ['help']
+  alias: {help: 'h', dir: 'd'},
+  default: {
+    dir: process.cwd()
+  },
+  boolean: ['help', 'log']
 })
 dotenv.load()
 
 if (argv.help) {
-  console.log('TODO')
+  console.error('hypertweet! streaming twitter api -> hypercore')
+  console.error('')
+  console.error('  hypertweet            create a hypertweet feed + share')
+  console.error('          --dir /data   directory to store hypercore feed')
+  console.error('          --log         display new tweets, useful for debugging')
+  console.error('          --url         specify a streaming twitter endpoint')
+  console.error('  hypertweet <key>      pretty print a shared hypertweet feed')
+  console.error('')
+  console.error('Also check out https://hypertweet.glitch.me/ & remix!!  =)')
   process.exit()
 }
 
@@ -25,10 +36,13 @@ if (argv._[0]) {
   tailStream()
 } else {
   // stream twitter data -> hypercore
-  hypertweet(argv.dir, function (err, feed) {
+  var opts = {
+    streamUrl: argv.url
+  }
+  hypertweet(argv.dir, opts, function (err, feed) {
     if (err) throw err
     console.log('Tweets streaming at:', feed.key.toString('hex'))
-    if (argv.watch) {
+    if (argv.log) {
       var stream = feed.createReadStream({tail: true, live: true})
       stream.on('data', function (tweet) {
         console.log(`${new Date().toLocaleString()} tweet by: ${tweet.user.name}`)
@@ -36,7 +50,6 @@ if (argv._[0]) {
     }
   })
 }
-
 
 function tailStream () {
   var key = argv._[0]

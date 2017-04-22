@@ -8,8 +8,10 @@ Streams your twitter feed to a [hypercore](https://github.com/mafintosh/hypercor
 
 ## Install
 
-```
+```sh
 npm install -g hypertweet
+
+hypertweet --help # see help!
 ```
 
 ### Set twitter tokens
@@ -25,16 +27,19 @@ process.env.TWITTER_ACCESS_TOKEN_SECRET
 
 ## Usage
 
+Use `hypertweet --help` to see all the options.
+
 ### Collect Feed Data
 
 Streams your feed into a hypercore feed:
 
 ```sh
-hypertweet [--dir=/joe/my-twitter-data/] # Saves in `cwd/data` or `--dir`
+❯ hypertweet --dir=/joe/my-twitter-data/
 sharing 0c3ec59a8111fde379e7ef82e6610ec02daf6bd3b704f41554cd5fe76afd5cc4
-2017-04-21T02:20:24.205Z 'tweet by:' 'some twitter user'
-2017-04-21T02:20:25.000Z 'tweet by:' 'more chirps'
-2017-04-21T02:20:30.043Z 'tweet by:' 'asdf'
+
+2017-04-21T02:20:24.205Z tweet by: 'some twitter user'
+2017-04-21T02:20:25.000Z tweet by: 'more chirps'
+2017-04-21T02:20:30.043Z tweet by: 'asdf'
 ```
 
 ### Print anywhere
@@ -42,7 +47,7 @@ sharing 0c3ec59a8111fde379e7ef82e6610ec02daf6bd3b704f41554cd5fe76afd5cc4
 Pretty print it in another terminal (or another computer anywhere):
 
 ```sh
-hypertweet 0c3ec59a8111fde379e7ef82e6610ec02daf6bd3b704f41554cd5fe76afd5cc4
+❯ hypertweet 0c3ec59a8111fde379e7ef82e6610ec02daf6bd3b704f41554cd5fe76afd5cc4
 
 # pretty tweets here
 ```
@@ -55,6 +60,15 @@ Pipe anywhere to anything.
 npm install -g hyperpipe
 hyperpipe /db 0c3ec59a8111fde379e7ef82e6610ec02daf6bd3b704f41554cd5fe76afd5cc4 > data.json
 ```
+
+## API
+
+### `hypertweet(dir|storage, [opts], callback(err, feed))`
+
+Create a stream from the twitter API and share via hypercore `feed`. Automatically joins network via `discovery-swarm`.
+
+* `dir|storage`: directory or random access module, e.g `random-access-memory`.
+* `opts.streamUrl`: the [twitter streaming api](https://dev.twitter.com/streaming/overview) endpoint you want. defaults to user.
 
 ## License
 
